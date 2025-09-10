@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MeAnime
 
-## Getting Started
+<!-- logo -->
 
-First, run the development server:
+Site de recomendação aleatória de animes, com foco em uma interface clara, links diretos para plataformas de streaming e desenvolvida pensando no público brasileiro.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<!-- print uso -->
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎯 Sobre o Projeto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+O **MeAnime** surgiu com a proposta de oferecer uma alternativa em português às ferramentas de recomendação de animes, que estão disponíveis em sua maioria apenas em inglês. A ideia é simples: sugerir de forma rápida um anime para assistir e já mostrar onde encontrá-lo no streaming, ou em outras palavras, um anime para te _animar_ (daí o nome **MeAnime**).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Experiência do Usuário
 
-## Learn More
+Além das funcionalidades, um dos pilares do projeto é a qualidade da experiência de uso. A interface foi pensada para ser intuitiva, com transições fluidas e microinterações que tornam a navegação mais agradável, desde o clique inicial até a escolha do anime.
 
-To learn more about Next.js, take a look at the following resources:
+## 🎨 Design (UI/UX)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Todo o design da aplicação foi concebido do zero como um estudo prático de UI/UX. O objetivo foi criar uma identidade visual minimalista e funcional, focada em um tema escuro e com uma hierarquia de informações clara para facilitar a leitura e a tomada de decisão do usuário.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+O projeto de design pode ser visualizado no Figma: _em breve_
 
-## Deploy on Vercel
+## 📋 Funcionalidades
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Recomendações aleatórias de animes com um clique
+- Página de detalhes com sinopse, trailer, nota e gêneros.
+- Links diretos para plataformas de streaming (Onde Assistir).
+- Filtro de sugestões por serviço de streaming.
+- URLs permanentes para compartilhamento.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Tecnologias
+
+- **Frontend:** Next.js, React, TypeScript
+- **Estilização:** Tailwind CSS
+- **Animações:**
+- **Fonte de Dados:** [Kitsu](https://kitsu.app)
+- **Deploy:** Vercel
+
+## 🗺️ Roadmap de Desenvolvimento
+
+O projeto está em desenvolvimento inicial. O roadmap abaixo organiza as etapas planejadas para o MVP e possíveis expansões futuras.
+
+### MVP
+
+- [ ] Estrutura inicial com Next.js e TypeScript
+- [ ] Página inicial com botão de sugestão
+- [ ] Lógica para busca de anime aleatório na API
+- [ ] Página de detalhes do anime
+- [ ] Seção "Onde Assistir"
+- [ ] Filtro por plataforma de streaming
+- [ ] Compartilhamento de recomendações
+
+### Pós-MVP (Planejado)
+
+- [ ] Tradução de sinopses para português
+- [ ] Filtro por áudio (dublado / legendado)
+- [ ] Sistema de _Watchlist_
+- [ ] Funcionalidade de pesquisa por nome
+- [ ] Sugestões de animes semelhantes a um escolhido
+- [ ] Filtros avançados (gênero, nota)
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](/LICENSE) para mais detalhes.
