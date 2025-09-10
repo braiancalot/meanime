@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "prettier --check .",
-    "lint:fix": "prettoer --write ."
+    "lint:fix": "prettier --write ."
   },
   "dependencies": {
     "next": "15.5.2",
