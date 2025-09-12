@@ -1,7 +1,15 @@
 {
   "name": "meanime",
+  "description": "Aplicação web de sugestões aleatórias de animes para o público brasileiro.",
   "version": "0.1.0",
+  "author": "Braian Calot <braian.s.calot@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/braiancalot/meanime.git"
+  },
+  "homepage": "https://meanime.teshi.com.br",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
