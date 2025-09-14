@@ -42,7 +42,7 @@ O projeto está em desenvolvimento inicial. O roadmap abaixo organiza as etapas 
 
 ### MVP
 
-- [ ] Estrutura inicial com Next.js e TypeScript
+- [x] Estrutura inicial com Next.js e TypeScript
 - [ ] Página inicial com botão de sugestão
 - [ ] Lógica para busca de anime aleatório na API
 - [ ] Página de detalhes do anime
@@ -53,7 +53,6 @@ O projeto está em desenvolvimento inicial. O roadmap abaixo organiza as etapas 
 ### Pós-MVP (Planejado)
 
 - [ ] Tradução de sinopses para português
-- [ ] Filtro por áudio (dublado / legendado)
 - [ ] Sistema de _Watchlist_
 - [ ] Funcionalidade de pesquisa por nome
 - [ ] Sugestões de animes semelhantes a um escolhido
