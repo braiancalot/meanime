@@ -11,6 +11,7 @@ const document = gql`
     Media(id: $id) {
       id
       idMal
+      format
       title {
         english
         native
@@ -92,6 +93,7 @@ export default function Home() {
               <h2>{anime.title.romaji}</h2>
               <h3>{anime.title.english}</h3>
               <span>{`id: ${anime.id} (idMal: ${anime.idMal})`}</span>
+              <span>{anime.format}</span>
               <span>{anime.seasonYear}</span>
               <span>{`${anime.averageScore}%`}</span>
               <span>{`${anime.episodes} eps`}</span>
