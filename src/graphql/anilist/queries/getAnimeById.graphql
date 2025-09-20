@@ -1,5 +1,5 @@
-query Media($id: Int) {
-  Media(id: $id) {
+query GetAnimeById($id: Int) {
+  anime: Media(id: $id) {
     id
     idMal
     format

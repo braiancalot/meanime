@@ -4673,17 +4673,17 @@ export type YearStats = {
   year?: Maybe<Scalars['Int']['output']>;
 };
 
-export type MediaQueryVariables = Exact<{
+export type GetAnimeByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type MediaQuery = { __typename?: 'Query', Media?: { __typename?: 'Media', id: number, idMal?: number | null, format?: MediaFormat | null, description?: string | null, bannerImage?: string | null, seasonYear?: number | null, episodes?: number | null, averageScore?: number | null, genres?: Array<string | null> | null, title?: { __typename?: 'MediaTitle', english?: string | null, native?: string | null, romaji?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', extraLarge?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, site: string, siteId?: number | null, type?: ExternalLinkType | null, isDisabled?: boolean | null, url?: string | null } | null> | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, site?: string | null, thumbnail?: string | null } | null } | null };
+export type GetAnimeByIdQuery = { __typename?: 'Query', anime?: { __typename?: 'Media', id: number, idMal?: number | null, format?: MediaFormat | null, description?: string | null, bannerImage?: string | null, seasonYear?: number | null, episodes?: number | null, averageScore?: number | null, genres?: Array<string | null> | null, title?: { __typename?: 'MediaTitle', english?: string | null, native?: string | null, romaji?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', extraLarge?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, site: string, siteId?: number | null, type?: ExternalLinkType | null, isDisabled?: boolean | null, url?: string | null } | null> | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, site?: string | null, thumbnail?: string | null } | null } | null };
 
 
-export const MediaDocument = gql`
-    query Media($id: Int) {
-  Media(id: $id) {
+export const GetAnimeByIdDocument = gql`
+    query GetAnimeById($id: Int) {
+  anime: Media(id: $id) {
     id
     idMal
     format
@@ -4725,8 +4725,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    Media(variables?: MediaQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<MediaQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MediaQuery>({ document: MediaDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Media', 'query', variables);
+    GetAnimeById(variables?: GetAnimeByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeByIdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeByIdQuery>({ document: GetAnimeByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeById', 'query', variables);
     }
   };
 }
