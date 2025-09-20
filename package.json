@@ -16,7 +16,9 @@
     "start": "next start",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write .",
-    "commit": "cz"
+    "commit": "cz",
+    "codegen": "graphql-codegen",
+    "codegen:introspect": "graphql-codegen --config codegen-introspect.ts"
   },
   "dependencies": {
     "graphql": "^16.11.0",
@@ -28,6 +30,9 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@graphql-codegen/cli": "^6.0.0",
+    "@graphql-codegen/introspection": "^5.0.0",
+    "@graphql-codegen/typescript-graphql-request": "^6.3.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24",
     "@types/react": "^19",

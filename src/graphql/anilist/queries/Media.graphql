@@ -1,0 +1,34 @@
+query Media($id: Int) {
+  Media(id: $id) {
+    id
+    idMal
+    format
+    title {
+      english
+      native
+      romaji
+    }
+    description
+    coverImage {
+      extraLarge
+    }
+    bannerImage
+    seasonYear
+    episodes
+    averageScore
+    genres
+    externalLinks {
+      id
+      site
+      siteId
+      type
+      isDisabled
+      url
+    }
+    trailer {
+      id
+      site
+      thumbnail
+    }
+  }
+}
