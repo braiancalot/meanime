@@ -4673,6 +4673,8 @@ export type YearStats = {
   year?: Maybe<Scalars['Int']['output']>;
 };
 
+export type AnimeFieldsFragment = { __typename?: 'Media', id: number, idMal?: number | null, format?: MediaFormat | null, description?: string | null, bannerImage?: string | null, seasonYear?: number | null, episodes?: number | null, averageScore?: number | null, genres?: Array<string | null> | null, title?: { __typename?: 'MediaTitle', english?: string | null, native?: string | null, romaji?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', extraLarge?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, site: string, siteId?: number | null, type?: ExternalLinkType | null, isDisabled?: boolean | null, url?: string | null } | null> | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, site?: string | null, thumbnail?: string | null } | null };
+
 export type GetAnimeByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -4680,39 +4682,76 @@ export type GetAnimeByIdQueryVariables = Exact<{
 
 export type GetAnimeByIdQuery = { __typename?: 'Query', anime?: { __typename?: 'Media', id: number, idMal?: number | null, format?: MediaFormat | null, description?: string | null, bannerImage?: string | null, seasonYear?: number | null, episodes?: number | null, averageScore?: number | null, genres?: Array<string | null> | null, title?: { __typename?: 'MediaTitle', english?: string | null, native?: string | null, romaji?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', extraLarge?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, site: string, siteId?: number | null, type?: ExternalLinkType | null, isDisabled?: boolean | null, url?: string | null } | null> | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, site?: string | null, thumbnail?: string | null } | null } | null };
 
+export type GetAnimeByPageQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
+
+export type GetAnimeByPageQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', anime?: Array<{ __typename?: 'Media', id: number, idMal?: number | null, format?: MediaFormat | null, description?: string | null, bannerImage?: string | null, seasonYear?: number | null, episodes?: number | null, averageScore?: number | null, genres?: Array<string | null> | null, title?: { __typename?: 'MediaTitle', english?: string | null, native?: string | null, romaji?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', extraLarge?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, site: string, siteId?: number | null, type?: ExternalLinkType | null, isDisabled?: boolean | null, url?: string | null } | null> | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, site?: string | null, thumbnail?: string | null } | null } | null> | null } | null };
+
+export type GetPageInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPageInfoQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', total?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number } | null> | null } | null };
+
+export const AnimeFieldsFragmentDoc = gql`
+    fragment AnimeFields on Media {
+  id
+  idMal
+  format
+  title {
+    english
+    native
+    romaji
+  }
+  description
+  coverImage {
+    extraLarge
+  }
+  bannerImage
+  seasonYear
+  episodes
+  averageScore
+  genres
+  externalLinks {
+    id
+    site
+    siteId
+    type
+    isDisabled
+    url
+  }
+  trailer {
+    id
+    site
+    thumbnail
+  }
+}
+    `;
 export const GetAnimeByIdDocument = gql`
     query GetAnimeById($id: Int) {
-  anime: Media(id: $id) {
-    id
-    idMal
-    format
-    title {
-      english
-      native
-      romaji
+  anime: Media(id: $id, type: ANIME) {
+    ...AnimeFields
+  }
+}
+    ${AnimeFieldsFragmentDoc}`;
+export const GetAnimeByPageDocument = gql`
+    query GetAnimeByPage($page: Int) {
+  Page(page: $page, perPage: 1) {
+    anime: media(sort: ID, type: ANIME) {
+      ...AnimeFields
     }
-    description
-    coverImage {
-      extraLarge
+  }
+}
+    ${AnimeFieldsFragmentDoc}`;
+export const GetPageInfoDocument = gql`
+    query GetPageInfo {
+  Page(perPage: 1) {
+    pageInfo {
+      total
     }
-    bannerImage
-    seasonYear
-    episodes
-    averageScore
-    genres
-    externalLinks {
+    media(type: ANIME) {
       id
-      site
-      siteId
-      type
-      isDisabled
-      url
-    }
-    trailer {
-      id
-      site
-      thumbnail
     }
   }
 }
@@ -4727,6 +4766,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     GetAnimeById(variables?: GetAnimeByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeByIdQuery>({ document: GetAnimeByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeById', 'query', variables);
+    },
+    GetAnimeByPage(variables?: GetAnimeByPageQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeByPageQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeByPageQuery>({ document: GetAnimeByPageDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeByPage', 'query', variables);
+    },
+    GetPageInfo(variables?: GetPageInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetPageInfoQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPageInfoQuery>({ document: GetPageInfoDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetPageInfo', 'query', variables);
     }
   };
 }

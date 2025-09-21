@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -10,18 +10,37 @@ import { getSdk, GetAnimeByIdQuery } from "@/graphql/generated/anilist";
 
 type Anime = NonNullable<GetAnimeByIdQuery["anime"]>;
 
+const sdk = getSdk(client);
+
 export default function Home() {
   const [anime, setAnime] = useState<Anime | null>(null);
+  const [totalAnimes, setTotalAnimes] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function getAnime() {
+  useEffect(() => {
+    getTotalAnimes();
+  }, []);
+
+  async function getTotalAnimes() {
+    const data = await sdk.GetPageInfo();
+
+    if (data.Page?.pageInfo?.total) {
+      setTotalAnimes(data.Page?.pageInfo?.total);
+    }
+  }
+
+  async function getRandomAnime() {
+    if (totalAnimes === 0) return;
     setIsLoading(true);
 
-    const sdk = getSdk(client);
-    const data = await sdk.GetAnimeById({ id: 1535 });
+    const randomPage = Math.floor(Math.random() * totalAnimes) + 1;
+    const data = await sdk.GetAnimeByPage({ page: randomPage });
 
-    if (data.anime) setAnime(data.anime);
+    console.log(`Page: ${randomPage}`);
 
+    if (data.Page?.anime) {
+      setAnime(data.Page.anime[0]);
+    }
     setIsLoading(false);
   }
 
@@ -30,9 +49,9 @@ export default function Home() {
       <button
         className="text-white font-medium rounded-lg text-sm px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-800"
         type="button"
-        onClick={getAnime}
+        onClick={getRandomAnime}
       >
-        Me anime
+        {`Me anime (${totalAnimes})`}
       </button>
 
       {isLoading ? (
@@ -59,15 +78,15 @@ export default function Home() {
             )}
 
             <div className="flex flex-col items-center gap-2">
-              <h2>{anime.title?.romaji || "Título romanji não encontrado."}</h2>
-              <h3>{anime.title?.english || "Título inglês não encontrado."}</h3>
+              <h2>{anime.title?.romaji || "TÍTULO ROMANJI NÃO ENCONTRADO"}</h2>
+              <h3>{anime.title?.english || "TÍTULO INGLÊS NÃO ENCONTRADO"}</h3>
               <span>{`id: ${anime.id} (idMal: ${anime.idMal})`}</span>
-              <span>{anime.format}</span>
-              <span>{anime.seasonYear}</span>
-              <span>{`${anime.averageScore}%`}</span>
-              <span>{`${anime.episodes} eps`}</span>
-              <span>{anime.genres?.join(", ")}</span>
-              <p>{anime.description}</p>
+              <span>{`Formato; ${anime.format}`}</span>
+              <span>{`Ano: ${anime.seasonYear}`}</span>
+              <span>{`Avaliação: ${anime.averageScore}%`}</span>
+              <span>{`Nº de Episódios: ${anime.episodes}`}</span>
+              <span>{`Gêneros: ${anime.genres?.join(", ")}`}</span>
+              <p>{`Sinopse: ${anime.description}`}</p>
 
               <span>Links:</span>
               {anime.externalLinks?.map((link: any) => (
@@ -91,14 +110,14 @@ export default function Home() {
 
                 {anime.trailer?.thumbnail && (
                   <Image
-                    alt="Trailer Tumbanil"
+                    alt="Trailer Thumbnail"
                     width={480}
                     height={360}
                     src={anime.trailer.thumbnail}
                   />
                 )}
 
-                {anime.trailer?.id && (
+                {anime.trailer?.id ? (
                   <Link
                     href={`https://www.youtube.com/watch?v=${anime.trailer.id}`}
                     target="_blank"
@@ -106,6 +125,8 @@ export default function Home() {
                   >
                     Assistir
                   </Link>
+                ) : (
+                  "TRAILER NÃO ENCONTRADO"
                 )}
               </div>
             </div>
