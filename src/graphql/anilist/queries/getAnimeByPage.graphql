@@ -1,0 +1,9 @@
+#import "../fragments/animeFields.graphql"
+
+query GetAnimeByPage($page: Int) {
+  Page(page: $page, perPage: 1) {
+    anime: media(sort: ID, type: ANIME) {
+      ...AnimeFields
+    }
+  }
+}
