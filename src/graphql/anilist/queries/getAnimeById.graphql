@@ -1,7 +1,7 @@
 #import "../fragments/animeFields.graphql"
 
 query GetAnimeById($id: Int) {
-  anime: Media(id: $id, type: ANIME) {
+  anime: Media(id: $id) {
     ...AnimeFields
   }
 }

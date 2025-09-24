@@ -1,9 +1,22 @@
-query GetPageInfo {
+query GetPageInfo(
+  $sort: [MediaSort]
+  $type: MediaType
+  $isAdult: Boolean
+  $statusNot: MediaStatus
+  $formatIn: [MediaFormat]
+) {
   Page(perPage: 1) {
     pageInfo {
       total
     }
-    media(type: ANIME) {
+    media(
+      sort: $sort
+      type: $type
+      isAdult: $isAdult
+      status_not: $statusNot
+      averageScore_greater: 0
+      format_in: $formatIn
+    ) {
       id
     }
   }

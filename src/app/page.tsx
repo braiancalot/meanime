@@ -6,9 +6,24 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { client } from "@/lib/graphqlClient";
-import { getSdk, GetAnimeByIdQuery } from "@/graphql/generated/anilist";
+import {
+  getSdk,
+  GetAnimeByIdQuery,
+  MediaType,
+  MediaSort,
+  MediaStatus,
+  MediaFormat,
+} from "@/graphql/generated/anilist";
 
 type Anime = NonNullable<GetAnimeByIdQuery["anime"]>;
+
+const FILTERS = {
+  sort: [MediaSort.Id],
+  type: MediaType.Anime,
+  statusNot: MediaStatus.NotYetReleased,
+  isAdult: false,
+  formatIn: [MediaFormat.Tv],
+};
 
 const sdk = getSdk(client);
 
@@ -22,7 +37,7 @@ export default function Home() {
   }, []);
 
   async function getTotalAnimes() {
-    const data = await sdk.GetPageInfo();
+    const data = await sdk.GetPageInfo(FILTERS);
 
     if (data.Page?.pageInfo?.total) {
       setTotalAnimes(data.Page?.pageInfo?.total);
@@ -34,12 +49,19 @@ export default function Home() {
     setIsLoading(true);
 
     const randomPage = Math.floor(Math.random() * totalAnimes) + 1;
-    const data = await sdk.GetAnimeByPage({ page: randomPage });
-
-    console.log(`Page: ${randomPage}`);
+    const data = await sdk.GetAnimeByPage({
+      page: randomPage,
+      ...FILTERS,
+    });
 
     if (data.Page?.anime) {
       setAnime(data.Page.anime[0]);
+      const anime = data.Page.anime[0];
+      if (anime) {
+        console.log(
+          `ID: ${anime.id} | Title: ${anime.title?.romaji || anime.title?.english || anime.title?.native} | Page: ${randomPage}`,
+        );
+      }
     }
     setIsLoading(false);
   }
@@ -81,7 +103,7 @@ export default function Home() {
               <h2>{anime.title?.romaji || "TÍTULO ROMANJI NÃO ENCONTRADO"}</h2>
               <h3>{anime.title?.english || "TÍTULO INGLÊS NÃO ENCONTRADO"}</h3>
               <span>{`id: ${anime.id} (idMal: ${anime.idMal})`}</span>
-              <span>{`Formato; ${anime.format}`}</span>
+              <span>{`Formato: ${anime.format}`}</span>
               <span>{`Ano: ${anime.seasonYear}`}</span>
               <span>{`Avaliação: ${anime.averageScore}%`}</span>
               <span>{`Nº de Episódios: ${anime.episodes}`}</span>
