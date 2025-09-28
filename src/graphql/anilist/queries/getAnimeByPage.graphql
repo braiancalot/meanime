@@ -1,8 +1,22 @@
 #import "../fragments/animeFields.graphql"
 
-query GetAnimeByPage($page: Int) {
+query GetAnimeByPage(
+  $page: Int
+  $sort: [MediaSort]
+  $type: MediaType
+  $isAdult: Boolean
+  $statusNot: MediaStatus
+  $formatIn: [MediaFormat]
+) {
   Page(page: $page, perPage: 1) {
-    anime: media(sort: ID, type: ANIME) {
+    anime: media(
+      sort: $sort
+      type: $type
+      isAdult: $isAdult
+      status_not: $statusNot
+      averageScore_greater: 0
+      format_in: $formatIn
+    ) {
       ...AnimeFields
     }
   }

@@ -4684,12 +4684,23 @@ export type GetAnimeByIdQuery = { __typename?: 'Query', anime?: { __typename?: '
 
 export type GetAnimeByPageQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<MediaSort>> | InputMaybe<MediaSort>>;
+  type?: InputMaybe<MediaType>;
+  isAdult?: InputMaybe<Scalars['Boolean']['input']>;
+  statusNot?: InputMaybe<MediaStatus>;
+  formatIn?: InputMaybe<Array<InputMaybe<MediaFormat>> | InputMaybe<MediaFormat>>;
 }>;
 
 
 export type GetAnimeByPageQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', anime?: Array<{ __typename?: 'Media', id: number, idMal?: number | null, format?: MediaFormat | null, description?: string | null, bannerImage?: string | null, seasonYear?: number | null, episodes?: number | null, averageScore?: number | null, genres?: Array<string | null> | null, title?: { __typename?: 'MediaTitle', english?: string | null, native?: string | null, romaji?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', extraLarge?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, site: string, siteId?: number | null, type?: ExternalLinkType | null, isDisabled?: boolean | null, url?: string | null } | null> | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, site?: string | null, thumbnail?: string | null } | null } | null> | null } | null };
 
-export type GetPageInfoQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetPageInfoQueryVariables = Exact<{
+  sort?: InputMaybe<Array<InputMaybe<MediaSort>> | InputMaybe<MediaSort>>;
+  type?: InputMaybe<MediaType>;
+  isAdult?: InputMaybe<Scalars['Boolean']['input']>;
+  statusNot?: InputMaybe<MediaStatus>;
+  formatIn?: InputMaybe<Array<InputMaybe<MediaFormat>> | InputMaybe<MediaFormat>>;
+}>;
 
 
 export type GetPageInfoQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', total?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number } | null> | null } | null };
@@ -4730,27 +4741,41 @@ export const AnimeFieldsFragmentDoc = gql`
     `;
 export const GetAnimeByIdDocument = gql`
     query GetAnimeById($id: Int) {
-  anime: Media(id: $id, type: ANIME) {
+  anime: Media(id: $id) {
     ...AnimeFields
   }
 }
     ${AnimeFieldsFragmentDoc}`;
 export const GetAnimeByPageDocument = gql`
-    query GetAnimeByPage($page: Int) {
+    query GetAnimeByPage($page: Int, $sort: [MediaSort], $type: MediaType, $isAdult: Boolean, $statusNot: MediaStatus, $formatIn: [MediaFormat]) {
   Page(page: $page, perPage: 1) {
-    anime: media(sort: ID, type: ANIME) {
+    anime: media(
+      sort: $sort
+      type: $type
+      isAdult: $isAdult
+      status_not: $statusNot
+      averageScore_greater: 0
+      format_in: $formatIn
+    ) {
       ...AnimeFields
     }
   }
 }
     ${AnimeFieldsFragmentDoc}`;
 export const GetPageInfoDocument = gql`
-    query GetPageInfo {
+    query GetPageInfo($sort: [MediaSort], $type: MediaType, $isAdult: Boolean, $statusNot: MediaStatus, $formatIn: [MediaFormat]) {
   Page(perPage: 1) {
     pageInfo {
       total
     }
-    media(type: ANIME) {
+    media(
+      sort: $sort
+      type: $type
+      isAdult: $isAdult
+      status_not: $statusNot
+      averageScore_greater: 0
+      format_in: $formatIn
+    ) {
       id
     }
   }
