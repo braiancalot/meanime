@@ -8,14 +8,17 @@ import Link from "next/link";
 import { client } from "@/lib/graphqlClient";
 import {
   getSdk,
-  GetAnimeByIdQuery,
   MediaType,
   MediaSort,
   MediaStatus,
+  ExternalLinkType,
   MediaFormat,
+  GetAnimeByPageQuery,
 } from "@/graphql/generated/anilist";
 
-type Anime = NonNullable<GetAnimeByIdQuery["anime"]>;
+type Anime = NonNullable<
+  NonNullable<NonNullable<GetAnimeByPageQuery["Page"]>["anime"]>[number]
+>;
 
 const FILTERS = {
   sort: [MediaSort.Id],
@@ -23,6 +26,12 @@ const FILTERS = {
   statusNot: MediaStatus.NotYetReleased,
   isAdult: false,
   formatIn: [MediaFormat.Tv],
+};
+
+const VALID_STREAMINGS = {
+  "5": "Crunchyroll",
+  "10": "Netflix",
+  "21": "Amazon Prime Video",
 };
 
 const sdk = getSdk(client);
@@ -48,21 +57,34 @@ export default function Home() {
     if (totalAnimes === 0) return;
     setIsLoading(true);
 
-    const randomPage = Math.floor(Math.random() * totalAnimes) + 1;
-    const data = await sdk.GetAnimeByPage({
-      page: randomPage,
-      ...FILTERS,
-    });
+    const MAX_ATTEMPTS = 5;
+    let validAnime: Anime | null = null;
 
-    if (data.Page?.anime) {
-      setAnime(data.Page.anime[0]);
-      const anime = data.Page.anime[0];
-      if (anime) {
-        console.log(
-          `ID: ${anime.id} | Title: ${anime.title?.romaji || anime.title?.english || anime.title?.native} | Page: ${randomPage}`,
-        );
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      console.log(
+        `Tentativa ${attempt}/${MAX_ATTEMPTS} de encontrar um anime válido...`,
+      );
+
+      try {
+        const randomPage = Math.floor(Math.random() * totalAnimes) + 1;
+        const data = await sdk.GetAnimeByPage({ page: randomPage, ...FILTERS });
+        const candidateAnime = data.Page?.anime?.[0];
+
+        if (isAnimeValid(candidateAnime)) {
+          console.log(`[Anime Válido] ID: ${candidateAnime.id}`);
+          validAnime = formatAnimeData(candidateAnime);
+          break;
+        }
+      } catch (error) {
+        console.error("Erro na API:", error);
+        break;
       }
     }
+
+    if (validAnime) {
+      setAnime(validAnime);
+    }
+
     setIsLoading(false);
   }
 
@@ -111,21 +133,27 @@ export default function Home() {
               <p>{`Sinopse: ${anime.description}`}</p>
 
               <span>Links:</span>
-              {anime.externalLinks?.map((link: any) => (
-                <div key={link.id} className="flex gap-2 items-center">
-                  <span>{`${link.site} (${link.siteId})`}</span>
+              {anime.externalLinks
+                ?.filter((link) => link?.type === ExternalLinkType.Streaming)
+                .map((link: any) => (
+                  <div key={link.id} className="flex gap-2 items-center">
+                    <span>{`${link.site} (${link.siteId})`}</span>
 
-                  <span>{link.type}</span>
+                    <span>{link.type}</span>
 
-                  {link.isDisabled ? (
-                    <span className="italic">Desabilitado</span>
-                  ) : (
-                    <Link href={link.url} target="_blank" className="underline">
-                      Acessar
-                    </Link>
-                  )}
-                </div>
-              ))}
+                    {link.isDisabled ? (
+                      <span className="italic">Desabilitado</span>
+                    ) : (
+                      <Link
+                        href={link.url}
+                        target="_blank"
+                        className="underline"
+                      >
+                        Acessar
+                      </Link>
+                    )}
+                  </div>
+                ))}
 
               <div className="mt-4 flex flex-col items-center">
                 <span>Trailer</span>
@@ -157,4 +185,38 @@ export default function Home() {
       )}
     </div>
   );
+}
+
+function isAnimeValid(anime: Anime | null | undefined): anime is Anime {
+  if (!anime) {
+    console.log("[Anime Inválido] null ou undefined");
+    return false;
+  }
+
+  if (!anime.externalLinks || anime.externalLinks.length == 0) {
+    const message = `[Anime Inválido] Não contém external links | ID: ${anime.id} | Title: ${anime.title?.romaji || anime.title?.english || anime.title?.native}`;
+
+    console.log(message);
+    window.alert(message); // debug
+    return false;
+  }
+
+  return true;
+}
+
+function formatAnimeData(anime: Anime): Anime {
+  const validStreamingsLinks = (anime.externalLinks || [])
+    .filter((link) => link?.type === ExternalLinkType.Streaming)
+    .map((link) => {
+      if (link?.siteId != null && link.siteId in VALID_STREAMINGS) {
+        return link;
+      }
+
+      return { ...link, id: link?.id || -1, site: link?.site + " - INVALID" };
+    });
+
+  return {
+    ...anime,
+    externalLinks: validStreamingsLinks,
+  };
 }
