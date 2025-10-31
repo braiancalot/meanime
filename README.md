@@ -6,6 +6,10 @@ Site de recomendação aleatória de animes, com foco em uma interface clara, li
 
 <!-- print uso -->
 
+## 🚧 Em construção 🚧
+
+Este projeto ainda está em desenvolvimento ativo.
+
 ## 🎯 Sobre o Projeto
 
 O **MeAnime** surgiu com a proposta de oferecer uma alternativa em português às ferramentas de recomendação de animes, que estão disponíveis em sua maioria apenas em inglês. A ideia é simples: sugerir de forma rápida um anime para assistir e já mostrar onde encontrá-lo no streaming, ou em outras palavras, um anime para te _animar_ (daí o nome **MeAnime**).
@@ -49,12 +53,11 @@ O projeto está em desenvolvimento. O roadmap abaixo organiza as etapas planejad
 - [ ] Criação de páginas dinâmicas (`/anime/[slug]`) com renderização otimizada (ISR).
 - [ ] Implementação de SEO técnico (sitemap, metadados, Schema.org).
 
-### Lançamento
+### v1.0
 - [ ] Implementação do design final da interface (UI/UX).
 - [ ] Criação das páginas estáticas (Sobre, Feedback, Termos).
 - [ ] Implementação de features de engajamento (compartilhamento, filtros).
-- [ ] Lógica para agrupar temporadas de uma mesma série.
-- [ ] Preparação para monetização com AdSense e lançamento oficial.
+- [ ] Lógica para agrupar temporadas de um mesmo anime.
 
 ### Funcionalidades futuras (Planejado)
 - [ ] Marcar como já assistido para otimizar recomendações
